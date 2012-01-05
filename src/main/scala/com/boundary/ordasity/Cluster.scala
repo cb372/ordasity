@@ -69,9 +69,9 @@ class Cluster(name: String, listener: Listener, config: ClusterConfig) extends C
   private var autoRebalanceFuture : Option[ScheduledFuture[_]] = None
 
   // Metrics
-  val listGauge = metrics.gauge[String]("my_" + config.workUnitShortName) { myWorkUnits.mkString(", ") }
-  val countGauge = metrics.gauge[Int]("my_" + config.workUnitShortName + "_count") { myWorkUnits.size }
-  val loadGauge = metrics.gauge[Double]("my_load") { myLoad() }
+//  val listGauge = metrics.gauge[String]("my_" + config.workUnitShortName) { myWorkUnits.mkString(", ") }
+//  val countGauge = metrics.gauge[Int]("my_" + config.workUnitShortName + "_count") { myWorkUnits.size }
+//  val loadGauge = metrics.gauge[Double]("my_load") { myLoad() }
 
   private val state = new AtomicReference[NodeState.Value](NodeState.Fresh)
 
@@ -722,7 +722,11 @@ class Cluster(name: String, listener: Listener, config: ClusterConfig) extends C
       parse[NodeInfo](data)
     } catch {
       case e: Exception =>
-        val parsedState = NodeState.valueOf(data).getOrElse(NodeState.Shutdown)
+        val parsedState = try {
+          NodeState.withName(data)
+        } catch {
+          case _ => NodeState.Shutdown
+        }
         val info = new NodeInfo(parsedState.toString, 0)
         log.warn("Saw node data in non-JSON format. Interpreting %s as: %s", data, info)
         info
