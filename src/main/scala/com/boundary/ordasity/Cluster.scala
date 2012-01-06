@@ -69,9 +69,9 @@ class Cluster(name: String, listener: Listener, config: ClusterConfig) extends C
   private var autoRebalanceFuture : Option[ScheduledFuture[_]] = None
 
   // Metrics
-//  val listGauge = metrics.gauge[String]("my_" + config.workUnitShortName) { myWorkUnits.mkString(", ") }
-//  val countGauge = metrics.gauge[Int]("my_" + config.workUnitShortName + "_count") { myWorkUnits.size }
-//  val loadGauge = metrics.gauge[Double]("my_load") { myLoad() }
+  val listGauge = metrics.gauge[String]("my_" + config.workUnitShortName) { myWorkUnits.mkString(", ") }
+  val countGauge = metrics.gauge[Int]("my_" + config.workUnitShortName + "_count") { myWorkUnits.size }
+  val loadGauge = metrics.gauge[Double]("my_load") { myLoad() }
 
   private val state = new AtomicReference[NodeState.Value](NodeState.Fresh)
 
