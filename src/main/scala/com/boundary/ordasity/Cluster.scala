@@ -755,9 +755,9 @@ class Cluster(name: String, listener: Listener, config: ClusterConfig) extends C
   }
 
   private def setState(to: NodeState.Value) {
+    state.set(to)
     val myInfo = new NodeInfo(state.get.toString, zk.getHandle().getSessionId)
     ZKUtils.set(zk, name + "/nodes/" + myNodeID, generate(myInfo))
-    state.set(to)
   }
 
   private def previousZKSessionStillActive() : Boolean = {
